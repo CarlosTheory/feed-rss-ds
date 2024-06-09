@@ -16,11 +16,7 @@ $discord = new Discord([
   'intents' => Intents::getDefaultIntents() | Intents::MESSAGE_CONTENT
 ]);
 
-$feed = new SimplePie();
-$lastCheck = new DateTime();
-$lastItem = null;
-$postCount = 0;
-$cachedCount = 0;
+
 
 $discord->on('ready', function ($discord) use ($feed, &$lastCheck, &$lastItem, &$postCount, &$cachedCount) {
   echo "Bot is ready! \n";
@@ -37,6 +33,14 @@ $discord->on('ready', function ($discord) use ($feed, &$lastCheck, &$lastItem, &
     if (strpos($content, '!getFeed') === 0) {
       $feedUrl = trim(str_replace('!getFeed', '', $content)); // Extrae la URL del mensaje
       echo 'Obteniendo feed de: ' . $feedUrl . "\n";
+      $message->channel->sendMessage("Estamos obteniendo el feed mi rey👑, achanta hasta que llegue un post nuevo de {$feedUrl} 😌");
+      // Crea una nueva instancia de SimplePie para este canal
+      $feed = new SimplePie();
+      $lastCheck = new DateTime();
+      $lastItem = null;
+      $postCount = 0;
+      $cachedCount = 0;
+
       $feed->set_feed_url($feedUrl);
       $feed->init();
       $feed->handle_content_type();
