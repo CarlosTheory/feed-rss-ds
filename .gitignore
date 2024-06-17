@@ -1,6 +1,4 @@
 /vendor/
 .env
-composer.lock
 /cache/
 /node_modules
-/package-lock.json
