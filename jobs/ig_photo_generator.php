@@ -97,6 +97,7 @@ function generateImage($backgroundUrl, $photoMessage)
   Browsershot::html($htmlContent)
     // ->setNodeBinary('/root/.nvm/versions/node/v20.14.0/bin/node')
     // ->setNpmBinary('/root/.nvm/versions/node/v20.14.0/bin/npm')
+    // ->noSandbox()
     ->windowSize(1080, 1350)
     ->save($fileName);
 
