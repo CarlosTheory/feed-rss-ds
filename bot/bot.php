@@ -2,6 +2,8 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 require __DIR__ . '/../jobs/rss_reader.php';
+require __DIR__ . '/../jobs/ig_photo_generator.php';
+
 
 use Discord\Discord;
 use Dotenv\Dotenv;
@@ -34,6 +36,29 @@ $discord->on('ready', function ($discord) use ($feed, &$lastCheck, &$lastItem, &
       $feedUrl = trim(str_replace('!getFeed', '', $content));
       handleRSSFeed($discord, $content, $feedUrl, $feed, $lastCheck, $lastItem, $postCount, $cachedCount, $message);
     }
+
+    if (strpos($message->content, '!generateImage') === 0) {
+      $params = explode(' ', $message->content);
+      array_shift($params); // Elimina el comando '!generateImage'
+      
+      // Asume que el último elemento es la URL del fondo si hay un archivo adjunto
+      $backgroundImage = $message->attachments->first() ?? null;
+      if ($backgroundImage) {
+        $backgroundUrl = $backgroundImage->url;
+      }
+      
+      $title = implode(' ', $params); 
+  
+      if ($backgroundUrl) {
+        $imageData = generateImage($backgroundUrl, $title);
+  
+        // Envía la imagen generada al canal
+        $message->channel->sendFile($imageData['fileName'], "image.png", '');
+      } else {
+        $message->reply("Por favor adjunta una imagen para usar como fondo.");
+      }
+    }
+
   });
 });
 
